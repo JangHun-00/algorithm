@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>DIY 알고리즘 - 정렬 알고리즘</title>
+</head>
+<body>
+    <h2>DIY 알고리즘</h2>
+    <div class="menu">
+        <a href="/sort_algorithm/sort_algorithm.html" id="firstbutton">정렬 알고리즘</a>
+        <a href="/search_algorithm/search_algorithm.html">탐색 알고리즘</a>
+        <a href="/other_algorithm/other_algorithm.html">기타 알고리즘</a>
+    </div>
+    <div class="bodytext">
+        <div class="sort-body">
+            <p>사용하고 싶은 정렬 알고리즘을 택한 후, 리스트 형식( [1, 2, 3, ...] )으로 값을 입력하세요.</p>
+            <lable class="field" for="sort">정렬 알고리즘 : </lable>
+            <select name="sort">
+                <option> ---------- 선택 ---------- </option>
+                <option value="Selection"> 선택 정렬(Selection Sort) </option>
+                <option value="Insertion"> 삽입 정렬(Insertion Sort) </option>
+                <option value="Merge-iter"> 합병 정렬(반복문) </option>
+                <option value="Merge-recursion"> 합병 정렬(재귀 함수) </option>
+                <option value="Bubble"> 버블 정렬(Bubble Sort) </option>
+                <option value="Quick"> 빠른 정렬(Quick Sort) </option>
+            </select>
+        </div>
+    </div>
+</body>
+</html>
