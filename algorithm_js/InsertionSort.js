@@ -18,5 +18,6 @@ function* InsertionSort(aList){
 
 var kList = [8,4,7,3,5,2,9];
 for(a of InsertionSort(kList)){
+    document.write(a[0]+"<br>");
     console.log(a);
 }
