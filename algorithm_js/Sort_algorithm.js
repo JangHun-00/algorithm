@@ -34,7 +34,9 @@ function numberOrNot(listbox){
 function startSort(){
     var plistbox = eval(document.querySelector(".input-box").value);
     if(listOrNot(plistbox) && numberOrNot(plistbox)){
-        showSelection(plistbox);
+        /*showSelection(plistbox);*/
+        showInsertion(plistbox);
+
     }
 }
 
@@ -60,6 +62,11 @@ function* SelectionSort(aList) {
 function showSelection(aList){
     var ll = 0;
     var turn = 0;
+    var firstP = document.createElement("p");
+    firstP.className = "selection-show";
+    firstP.id = "selection start";
+    document.querySelector("#result").appendChild(firstP);
+    document.getElementById("selection start").innerHTML = "<br><p>[선택 정렬(Selection Sort)]</p><span class='green'><p>초록 글씨: 현재 탐색된 최솟값(min_position)</span></p><p><span class='red'>빨간 글씨: 현재 탐색 대상(k)</span></p><br>";
     /*현재 최솟값 = 초록색, 현재 탐색 위치 = 빨간색*/
     for(a of SelectionSort(aList)){
         nowList = a[0].slice();
@@ -72,7 +79,7 @@ function showSelection(aList){
         document.getElementById("selection {}".format(ll)).innerHTML = "[ {} ]".format(nowList);
         if(nowList.length != a[0].length){
             turn = turn + 1;
-            document.getElementById("selection {}".format(ll)).innerHTML = "{}번째 정렬 종료: [ {} ]<br><br>".format(turn, nowList.slice(0, -1));
+            document.getElementById("selection {}".format(ll)).innerHTML = "{}번째 정렬 종료: [ {} ]<br><br><br>".format(turn, nowList.slice(0, -1));
         }
         ll = ll + 1;
     }
@@ -84,7 +91,7 @@ function* InsertionSort(aList){
     for(var i=1; i<aList.length; i++){
         var current_val = aList[i];
         var position = i;
-        yield a = [aList, position, current_val];
+        yield a = [aList, position, current_val, false];
         while(position > 0 && aList[position -1] > current_val){
             aList[position] = aList[position - 1];
             position = position -1;
@@ -93,6 +100,32 @@ function* InsertionSort(aList){
         if(position != i){
             aList[position] = current_val;
         }
-        yield a = [aList, position, current_val];
+        yield a = [aList, position, current_val, true];
+    }
+}
+
+function showInsertion(aList){
+    var ll = 0;
+    var turn = 0;
+    var firstP = document.createElement("p");
+    firstP.className = "insertion-show";
+    firstP.id = "insertion start";
+    document.querySelector("#result").appendChild(firstP);
+    document.getElementById("insertion start").innerHTML = "<br><p>[삽입 정렬(Insertion Sort)]</p><span class='red'>빨간 글씨 = 현재 탐색 대상(position)</span><br>";
+    /* 현재 탐색 위치(position) = 빨간색, 정렬 대상(current_val)*/
+    for(a of InsertionSort(aList)){
+        nowList = a[0].slice();
+        nowList[a[1]] = "<span class='red'>"+nowList[a[1]]+"</span>";
+        c_v = "<span class='green'>{}</span>".format(a[2]);
+        var newP = document.createElement("p");
+        newP.className = "insertion-show";
+        newP.id = "insertion {}".format(ll);
+        document.querySelector("#result").appendChild(newP);
+        document.getElementById("insertion {}".format(ll)).innerHTML = "정렬 대상(current_val): {}<br>[ {} ]".format(c_v, nowList);
+        if(a[3]){
+            turn = turn + 1;
+            document.getElementById("insertion {}".format(ll)).innerHTML = "정렬 대상(current_val): {}<br>{}번째 정렬 종료: [ {} ]<br><br><br>".format(c_v, turn, nowList);
+        }
+        ll = ll + 1;
     }
 }
