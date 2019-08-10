@@ -36,7 +36,8 @@ function startSort(){
     if(listOrNot(plistbox) && numberOrNot(plistbox)){
         /*showSelection(plistbox);*/
         /*showInsertion(plistbox);*/
-        showMergeIter(plistbox);
+        /*showMergeIter(plistbox);*/
+        showMergeRecursive(plistbox);
     }
 }
 
@@ -179,7 +180,7 @@ function* merge2(xs, ys){
     /* result.extend(xs[:i])*/
     result.push.apply(result, xs.slice(i));
     result.push.apply(result, ys.slice(j));
-    yield "둘 중 한 쪽의 리스트가 먼저 비었으므로 while 종료, 남은 리스트의 나머지 원소들도 result 리스트에 추가<br>"
+    yield "둘 중 한 쪽의 리스트가 먼저 비었으므로 while 종료, 남은 리스트의 나머지 원소들도 result 리스트에 추가<br>";
     yield "<span class='red'>merge2([{}], [{}])에 대한 최종 result 리스트: [{}]<br></span>".format(xs, ys, result);
     return result;
 }
@@ -196,5 +197,76 @@ function showMergeIter(aList){
         text_result = text_result + a;
     }
     document.getElementById("result").style.fontSize = "2vw";
+    document.getElementById("result").innerHTML = text_result;
+}
+
+function* MergeSort(alist){
+    var tmplist = alist.slice();
+    yield "<span class='green'><br><br>[{}]에 대한 MergeSort 함수 시작<br></span>".format(alist);
+    if(alist.length > 1){
+        yield "[{}]는 길이가 2 이상이므로, 좌우로 나누어 재귀함수 실행<br>".format(tmplist);
+        var mid = parseInt(alist.length / 2, 10);
+        var lefthalf = alist.slice(0, mid);
+        var righthalf = alist.slice(mid);
+
+        yield "[{}]의 lefthalf: [{}], righthalf: [{}]에 대한 재귀함수 실행<br>".format(tmplist, lefthalf, righthalf);
+        yield* MergeSort(lefthalf);
+        yield* MergeSort(righthalf);
+        yield "<div class='blue'><br><br>[{}]의 lefthalf와 righthalf에 대한 재귀함수 종료.<br>현재 lefthalf: [{}], righthalf: [{}]<br><br>".format(tmplist, lefthalf, righthalf);
+
+        var i = 0, j = 0, k = 0;
+        while(i < lefthalf.length && j < righthalf.length){
+            yield "lefthalf[{}]: {}, righthalf[{}]: {}<br>".format(i, lefthalf[i], j, righthalf[j]);
+            if(lefthalf[i] < righthalf[j]){
+                yield "lefthalf의 원소가 작으므로 {}를 alist에 넣기<br>".format(lefthalf[i]);
+                alist[k] = lefthalf[i];
+                i = i + 1;
+            } else {
+                yield "righthalf의 원소가 작으므로 {}를 alist에 넣기<br>".format(righthalf[j]);
+                alist[k] = righthalf[j];
+                j = j + 1;
+            }
+            k = k + 1;
+            showlist = changeColorMergeRecursive(alist, k-1);
+            yield "현재 alist: [{}]<br><br>".format(showlist);
+        }
+        while(i < lefthalf.length){
+            yield "righthalf의 원소들은 정렬 종료, 남은 lefthalf의 원소들도 alist에 넣기<br>lefthalf[{}]: {}<br>".format(i, lefthalf[i]);
+            alist[k] = lefthalf[i];
+            i = i + 1;
+            k = k + 1;
+            showlist = changeColorMergeRecursive(alist, k-1);
+            yield "현재 alist: [{}]<br><br>".format(showlist);
+        }
+        while(j < righthalf.length){
+            yield "lefthalf의 원소들은 정렬 종료, 남은 righthalf의 원소들도 alist에 넣기<br>righthalf[{}]: {}<br>".format(j, righthalf[j]);
+            alist[k] = righthalf[j];
+            j = j + 1;
+            k = k + 1;
+            showlist = changeColorMergeRecursive(alist, k-1);
+            yield "현재 alist: [{}]<br><br>".format(showlist);
+        }
+        yield "</div>"
+    }
+    yield "<span class='red'>[{}]에 대한 MergeSort 함수 결과: [{}]<br></span>".format(tmplist, alist);
+}
+
+function changeColorMergeRecursive(mlist, k){
+    var klist = mlist.slice();
+    for(var i=0; i<klist.length; i++){
+        if(i==k){
+            klist[i] = "<span class='red'>"+klist[i]+"</span>";
+        }
+    }
+    return klist;
+}
+
+function showMergeRecursive(aList){
+    var text_result = "<br><br>합병 정렬(MergeSort) 재귀함수 실행<br><span class='blue'>파란 글씨: 재귀함수 종료 후 while을 통해 lefthalf와 righthalf 합병하는 과정</span><br>";
+    for(a of MergeSort(aList)){
+        text_result = text_result + a;
+    }
+    text_result = text_result + "<br><br>최종 결과: [{}]".format(aList);
+    document.getElementById("result").style.fontSize = "3vw";
     document.getElementById("result").innerHTML = text_result;
 }
