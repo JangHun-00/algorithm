@@ -34,13 +34,34 @@ function numberOrNot(listbox){
 function startSort(){
     var plistbox = eval(document.querySelector(".input-box").value);
     if(listOrNot(plistbox) && numberOrNot(plistbox)){
-        /*showSelection(plistbox);*/
-        /*showInsertion(plistbox);*/
-        /*showMergeIter(plistbox);*/
-        /*showMergeRecursive(plistbox);*/
-        showBubble(plistbox);
+        var option = document.querySelector("#SortOption").value;
+        switch(option){
+            case "Selection": showSelection(plistbox);
+            break;
+            case "Insertion": showInsertion(plistbox);
+            break;
+            case "Merge-iter": showMergeIter(plistbox);
+            break;
+            case "Merge-recursive": showMergeRecursive(plistbox);
+            break;
+            case "Bubble": showBubble(plistbox);
+            break;
+            case "Quick": showQuick(plistbox);
+            break;
+            case "NoChoice": alert("정렬 알고리즘 종류를 선택해주세요.");
+            break;
+        default: alert("오류가 발생했습니다.");
+        }
     }
 }
+
+
+
+
+
+
+
+
 
 function* SelectionSort(aList) {
     /* [리스트, 현재 최소값(min_position), 현재 탐색 위치(k)] */
@@ -88,6 +109,13 @@ function showSelection(aList){
 }
 
 
+
+
+
+
+
+
+
 function* InsertionSort(aList){
     /* 리스트, 현재 탐색 위치(position), 정렬 대상(current_val) */
     for(var i=1; i<aList.length; i++){
@@ -131,6 +159,14 @@ function showInsertion(aList){
         ll = ll + 1;
     }
 }
+
+
+
+
+
+
+
+
 
 function* i_MergeSort(lst){
     yield "<span class='blue'><br>lst: [{}]에 대한 i_MergeSort 함수 실행<br></span>".format(lst);
@@ -200,6 +236,16 @@ function showMergeIter(aList){
     document.getElementById("result").style.fontSize = "2vw";
     document.getElementById("result").innerHTML = text_result;
 }
+
+
+
+
+
+
+
+
+
+
 
 function* MergeSort(alist){
     var tmplist = alist.slice();
@@ -272,6 +318,14 @@ function showMergeRecursive(aList){
     document.getElementById("result").innerHTML = text_result;
 }
 
+
+
+
+
+
+
+
+
 function* bubbleSort(data_list){
     for(var check = (data_list.length - 1); check > 0; check--){
         var xth = data_list.length - check;
@@ -303,5 +357,102 @@ function showBubble(alist){
         text_result = text_result + a;
     }
     text_result = text_result + "<br><br><br><br>최종 결과: [{}]".format(alist);
+    document.getElementById("result").innerHTML = text_result;
+}
+
+
+
+
+
+
+
+
+function* quickSort(data_list){
+    yield* quickSortHip(data_list, 0, data_list.length - 1);
+    yield "<br>최종 결과: [{}]".format(data_list);
+}
+
+function* quickSortHip(data_list, first, last){
+    if(first < last){
+        var partitionResult = yield* partition(data_list, first, last);
+        var pivot = partitionResult[0];
+        var splitpoint = partitionResult[1];
+        var less = data_list.filter(x => x < pivot);
+        var great = data_list.filter(x => x > pivot);
+
+        yield* quickSortHip(data_list, first, splitpoint-1);
+        yield* quickSortHip(data_list, splitpoint+1, last);
+
+    }
+}
+
+function* partition(data_list, first, last){
+    var showlist = data_list.slice();
+    showlist[first] = "<span class='red'>"+showlist[first];
+    showlist[last] = showlist[last]+"</span>";
+    yield "현재 정렬 대상: [{}]<br>".format(showlist);
+
+    var showRange = data_list.slice(first, last+1);
+    var pivotvalue = data_list[first];
+    var leftmark = first + 1;
+    var rightmark = last;
+
+    showRange[rightmark-first] = "<span class='red'>"+data_list[rightmark]+"</span>";
+    showRange[leftmark-first] = "<span class='blue'>"+data_list[leftmark]+"</span>";
+    showRange[first-first] = "<span class='green'>"+data_list[first]+"</span>";
+    yield "{}<br>".format(showRange);
+
+    var done = false;
+    while(!done){
+
+        while(leftmark <= rightmark && data_list[leftmark] <= pivotvalue){
+            showRange[leftmark-first] = data_list[leftmark];
+            leftmark = leftmark + 1;
+            showRange[rightmark-first] = "<span class='red'>"+data_list[rightmark]+"</span>";
+            showRange[leftmark-first] = "<span class='blue'>"+data_list[leftmark]+"</span>";
+            yield "{}<br>".format(showRange);
+        }
+
+        while(data_list[rightmark] >= pivotvalue && rightmark >= leftmark){
+            showRange[rightmark-first] = data_list[rightmark];
+            rightmark = rightmark - 1;
+            showRange[rightmark-first] = "<span class='red'>"+data_list[rightmark]+"</span>";
+            showRange[leftmark-first] = "<span class='blue'>"+data_list[leftmark]+"</span>";
+            yield "{}<br>".format(showRange);
+        }
+
+        if(rightmark < leftmark){
+            done = true;
+        } else {
+            var temp = data_list[leftmark];
+            data_list[leftmark] = data_list[rightmark];
+            data_list[rightmark] = temp;
+            showRange = data_list.slice(first, last+1);
+            yield "{}<br>".format(showRange);
+            showRange[first-first] = "<span class='green'>"+data_list[first]+"</span>";
+            showRange[leftmark-first] = "<span class='blue'>"+data_list[leftmark]+"</span>";
+            showRange[rightmark-first] = "<span class='red'>"+data_list[rightmark]+"</span>";
+            yield "{}<br>".format(showRange);
+        }
+    }
+    temp = data_list[first];
+    data_list[first] = data_list[rightmark];
+    data_list[rightmark] = temp;
+
+    showRange = data_list.slice(first, last+1);
+    showRange[first-first] = "<span class='red'>"+data_list[first]+"</span>";
+    showRange[rightmark-first] = "<span class='green'>"+data_list[rightmark]+"</span>";
+    yield "{}<br>".format(showRange);
+    showRange = data_list.slice(first, last+1);
+    yield "부분 정렬 결과: {}<br><br><br>".format(showRange);
+
+    return [pivotvalue, rightmark];
+}
+
+function showQuick(alist){
+    var text_result = "빠른 정렬(Quick Sort)<br><span class='green'>피봇(Pivot)</span> / <span class='blue'>leftmark</span> / <span class='red'>rightmark</span><br><span class='blueSmall'>leftmark가 정렬 대상 범위를 벗어난 경우: 피봇이 범위 내 가장 큰 값이어서 leftmark가 만족하는 값(피봇보다 큰 값)을 계속 찾기 위해 인덱스 범위를 초과한 것</span><br><br><br>";
+    for(a of quickSort(alist)){
+        text_result = text_result + a;
+    }
     document.getElementById("result").innerHTML = text_result;
 }

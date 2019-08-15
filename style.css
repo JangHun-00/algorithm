@@ -80,3 +80,8 @@ h2 {
 .grey{
     color: #A9A9A9;
 }
+
+.blueSmall{
+    color: #1E90FF;
+    font-size: 2.8vw;
+}
