@@ -34,6 +34,7 @@ function numberOrNot(listbox){
 function startSort(){
     var plistbox = eval(document.querySelector(".input-box").value);
     if(listOrNot(plistbox) && numberOrNot(plistbox)){
+        document.querySelector("#result").innerHTML = "";
         var option = document.querySelector("#SortOption").value;
         switch(option){
             case "Selection": showSelection(plistbox);
